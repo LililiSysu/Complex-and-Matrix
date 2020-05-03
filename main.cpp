@@ -1,13 +1,17 @@
 #include"matrix_head.h"
 using namespace std;
+
 #define Type double
 
-int main1()
+int main_complex/**/()
 {
 	//testing complex.
 	Complex c0(9, 6);
 	Complex c1(1, 0);
 	Complex c2(4, -4);
+	cout << c2 + c0 + c1 << endl;
+	cout << Complex(4, 2) << endl;
+	cout << type(Complex(4, 3)) << endl;
 
 	cout << conj(c0) << endl;
 	cout << rotate(c1, pi / 4) << endl;
@@ -72,8 +76,9 @@ int main1()
 	end(); return 0;
 }
 
-int main()
+int main_matrix/**/()
 {
+	//testing Matrix
 	Type val[] = {
 		3,4,3,
 		4,6,2,
@@ -87,6 +92,8 @@ int main()
 	cout << "A * inv(A)=" << A * inv(A);
 	cout << "A.isSymmetric()=" << A.isSymmetric() << endl;
 	cout << "A.isPositiveDefinite()=" << A.isPositiveDefinite() << endl;
+	cout << "eig_val(A)="<<eig_val(A);
+	cout << "A.condition_num()=" << A.condition_num() << endl;
 
 	//check QR
 	Matrix<Type> Q, R;
@@ -119,6 +126,7 @@ int main()
 	cout << "Sigma=" << Sigma;
 	cout << "V_T=" << V_T;
 	cout << "U_Sigma_VT=" << U * Sigma * V_T;
+	cout << "B.condition_num()=" << B.condition_num() << endl;
 
 	//check norm_1, norm_2, norm_infinity, det, rank, single
 	cout << "B.norm_1()= " << B.norm_1() << endl;
@@ -151,6 +159,77 @@ int main()
 	cout << "U2_read" << U2_read;
 	cout << "(U2==U2_read) = " << (U2 == U2_read) << endl;
 	cout << "U2 - U2_read" << U2 - U2_read;
+	
+	//check extend block
+	Matrix<Type> M = A * A;
+	cout << "A=" << A;
+	cout << "M=" << M;
+	cout << "A-M=" << extend_block(A, M);
+	end(); return 0;
+}
+
+int main_image/**/()
+{
+	string file_name = "white.bmp";
+	ifstream fin;
+	fin.open(file_name, ios::binary);
+	if (!fin.is_open()) {
+		cout << "can't open file: " << file_name << endl;
+	}
+	
+	unsigned char c;
+	int i = 0;
+	while (!fin.eof()) {
+		fin >> c;
+		cout << int(c) << '\t';
+		i++;
+	}
+	cout << i << endl;
+
+	end(); return 0;
+}
+
+int main_tensor/**/()
+{
+	const int size = 6;
+	Matrix<Type> val[] = {
+		Matrix<Type>(3, 3, 'i'),Matrix<Type>(3, 6, 'g'),Matrix<Type>(6, 3, 'N'),
+		Matrix<Type>(2, 3, '0'),Matrix<Type>(2, 1, '1'),Matrix<Type>(1, 3, 'U')
+	};
+	Tensor<Type> tensor(val, size);
+	cout << "tensor =" << tensor;
+
+	end(); return 0;
+}
+
+int main/*_net/**/()
+{
+	const int shape_size = 4;
+	int shape[] = {
+		784,16,16,10
+	};
+	net<Type> N(shape, shape_size);
+	//cout << "N:" << N;
+
+	N.set_input(Matrix<Type>(1, 784, '1'));
+	cout << "N.forward_propagation()=" << N.forward_propagation();
+
+	end(); return 0;
+}
+
+int main_test/**/()
+{
+	Type val[] = {
+		4,-3,5,77
+	};
+	Matrix<Type> A(1, 4, val);
+	cout << "A=" << A;
+
+	A = extend_row_copy(A, 6);
+	cout << "A=" << A;
+
+	A = ReLu(A);
+	cout << "A=" << A;
 
 	end(); return 0;
 }
