@@ -1,8 +1,6 @@
 #pragma once
 #include<functional>
 #include<iostream>
-#include <stdlib.h>
-#include<stdio.h>
 #include<cmath>
 #include<iomanip>
 #include<ctime>
@@ -55,84 +53,84 @@ template<class T> T rand_num_09(unsigned int seed)
 
 //type functions for complex.
 
-char type(char a) {
+char type(const char& a) {
 	return 'c';
 }
-char type(bool a) {
+char type(const bool& a) {
 	return 'b';
 }
-char type(int a) {
+char type(const int& a) {
 	return 'i';
 }
-char type(long a) {
+char type(const long& a) {
 	return 'l';
 }
-char type(float a) {
+char type(const float& a) {
 	return 'f';
 }
-char type(double a) {
+char type(const double& a) {
 	return 'd';
 }
 
-char conj(char a) {
+char conj(const char& a) {
 	return a;
 }
-bool conj(bool a) {
+bool conj(const bool& a) {
 	return a;
 }
-int conj(int a) {
+int conj(const int& a) {
 	return a;
 }
-long conj(long a) {
+long conj(const long& a) {
 	return a;
 }
-float conj(float a) {
+float conj(const float& a) {
 	return a;
 }
-double conj(double a) {
-	return a;
-}
-
-char get_x(char a) {
-	return a;
-}
-bool get_x(bool a) {
-	return a;
-}
-int get_x(int a) {
-	return a;
-}
-long get_x(long a) {
-	return a;
-}
-float get_x(float a) {
-	return a;
-}
-double get_x(double a) {
+double conj(const double& a) {
 	return a;
 }
 
-char get_y(char a) {
+char get_x(const char& a) {
 	return a;
 }
-bool get_y(bool a) {
+bool get_x(const bool& a) {
 	return a;
 }
-int get_y(int a) {
+int get_x(const int& a) {
 	return a;
 }
-long get_y(long a) {
+long get_x(const long& a) {
 	return a;
 }
-float get_y(float a) {
+float get_x(const float& a) {
 	return a;
 }
-double get_y(double a) {
+double get_x(const double& a) {
+	return a;
+}
+
+char get_y(const char& a) {
+	return a;
+}
+bool get_y(const bool& a) {
+	return a;
+}
+int get_y(const int& a) {
+	return a;
+}
+long get_y(const long& a) {
+	return a;
+}
+float get_y(const float& a) {
+	return a;
+}
+double get_y(const double& a) {
 	return a;
 }
 
 //other functions
-string file_type(string file_name) {	//return the type of file
+string file_type(const string& file_name) {	//return the type of file
 	string ans = "";
 	for (int k = file_name.find('.') + 1; file_name[k] != '\0'; k++)
 		ans = ans + file_name[k];
@@ -163,7 +161,7 @@ private:
 	bool isFA_form; //0: Real-Imaginary. 1: Fabs-Angle.
 
 public:
-	Complex(double X = 0, double Y = 0, bool isFA = false) :x(X), y(Y), isFA_form(isFA) {
+	Complex(double X = 0, double Y = 0, bool isFA = false) :x(X), y(Y), isFA_form(isFA) {	//default: Real-Imaginary type.
 		if (isFA_form == true) y = arg(y);
 	}
 	Complex(const Complex& c) {
@@ -171,7 +169,7 @@ public:
 		y = c.y;
 		isFA_form = c.isFA_form;
 	}
-	Complex operator = (Complex c) {
+	Complex operator = (const Complex& c) {
 		x = c.x;
 		y = c.y;
 		isFA_form = c.isFA_form;
@@ -179,39 +177,37 @@ public:
 	}
 	~Complex() {}
 
-	double get_x() {
+	double get_x() const {
 		return x;
 	}
-	double get_y() {
+	double get_y() const {
 		return y;
 	}
-	friend double get_x(Complex c) {
+	friend double get_x(const Complex& c) {
 		return c.x;
 	}
-	friend double get_y(Complex c) {
+	friend double get_y(const Complex& c) {
 		return c.y;
 	}
-	double real()
-	{
+	double real() const	{
 		if (isFA_form)
 			return x * cos(y);
 		else
 			return x;
 	}
-	double imag()
-	{
+	double imag() const	{
 		if (isFA_form)
 			return x * sin(y);
 		else
 			return y;
 	}
-	double fab() {
+	double fab() const {
 		if (isFA_form)
 			return x;
 		else
 			return sqrt(x * x + y * y);
 	}
-	double angle() {
+	double angle() const {
 		if (isFA_form)
 			return y;
 		else
@@ -226,16 +222,16 @@ public:
 			else
 				return 0;	//set the angle of (0 + 0j) be 0
 	}
-	bool isFA() {
+	bool isFA() const {
 		return isFA_form;
 	}
-	bool isRI() {
+	bool isRI() const {
 		return !isFA_form;
 	}
-	bool form() {
+	bool form() const {
 		return isFA_form; //0: Real-Imaginary. 1: Fabs-Angle.
 	}
-	bool isZero() {
+	bool isZero() const {
 		if (isFA_form)
 			return x == 0;
 		else
@@ -274,7 +270,7 @@ public:
 			set(sqrt(x * x + y * y), angle(), true);
 	}
 
-	void print() {
+	void print() const {
 		if (isFA_form)
 			cout << x << " e^(" << y << "j)" << endl;
 		else
@@ -283,11 +279,11 @@ public:
 			else
 				cout << x << ' ' << y << 'j' << endl;
 	}
-	void input(bool isFA = false) {
+	void input(bool isFA = false) {	//default: Real-Imaginary type.
 		isFA_form = isFA;
 		cin >> x >> y;
 	}
-	friend void printf(const char* setting, Complex c) {
+	friend void printf(const char* setting, const Complex& c) {
 		if (c.isFA_form) {
 			printf(setting, c.x); printf((c.y >= 0 ? " e^( j%.4e )" : " e^( -j%.4e )"), fabs(c.y));
 		}
@@ -296,7 +292,7 @@ public:
 		}
 
 	}
-	friend void fprintf(FILE *const file,const char* setting, Complex c) {
+	friend void fprintf(FILE *const file,const char* setting, const Complex& c) {
 		if (c.isFA_form) {
 			fprintf(file, setting, c.x); fprintf(file, (c.y >= 0 ? " e^( j%.4e )" : " e^( -j%.4e )"), fabs(c.y));
 		}
@@ -305,7 +301,7 @@ public:
 		}
 
 	}
-	friend ostream& operator << (ostream& out, Complex c) {
+	friend ostream& operator << (ostream& out, const Complex& c) {
 		if (c.isFA_form)
 			out << c.x << "e^(" << c.y << "j)";
 		else
@@ -320,166 +316,115 @@ public:
 		c.isFA_form = false;	// default case is real-imaginary input
 		return in;
 	}
-	friend char type(Complex c) {
+	friend char type(const Complex& c) {
 		return 'C';
 	}
 
 	//the following answer form is same with the [c1/c] form.
-	friend Complex operator + (Complex c1, Complex c2) {
+	friend Complex operator + (const Complex& c1, const Complex& c2) {
 		if (c1.isFA_form) {
-			c1.set(c1.x * cos(c1.y) + c2.real(), c1.x * sin(c1.y) + c2.imag(), false);
-			c1.turn_FA(); return c1;
+			Complex ans(c1.x * cos(c1.y) + c2.real(), c1.x * sin(c1.y) + c2.imag());
+			ans.turn_FA();
+			return ans;
 		}
-		else {
-			c1.set(c1.x + c2.real(), c1.y + c2.imag()); return c1;
-		}
+		else
+			return Complex(c1.x + c2.real(), c1.y + c2.imag());
 	}
-	friend Complex operator + (double num, Complex c) {
+	friend Complex operator + (double num, const Complex& c) {
 		if (c.isFA_form) {
-			c.set(c.x * cos(c.y) + num, c.x * sin(c.y), false);
-			c.turn_FA(); return c;
+			Complex ans(c.x * cos(c.y) + num, c.x * sin(c.y));
+			ans.turn_FA();
+			return ans;
 		}
-		else {
-			c.set(c.x + num, c.y); return c;
-		}
+		else
+			return Complex(c.x + num, c.y);
 	}
-	friend Complex operator + (Complex c, double num) {
-		if (c.isFA_form) {
-			c.set(c.x * cos(c.y) + num, c.x * sin(c.y), false);
-			c.turn_FA(); return c;
-		}
-		else {
-			c.set(c.x + num, c.y); return c;
-		}
+	friend Complex operator + (const Complex& c, double num) {
+		return num + c;
 	}
-	friend Complex operator - (Complex c1, Complex c2) {
+	friend Complex operator - (const Complex& c1, const Complex& c2) {
 		if (c1.isFA_form) {
-			c1.set(c1.x * cos(c1.y) - c2.real(), c1.x * sin(c1.y) - c2.imag(), false);
-			c1.turn_FA(); return c1;
+			Complex ans(c1.x * cos(c1.y) - c2.real(), c1.x * sin(c1.y) - c2.imag());
+			ans.turn_FA();
+			return ans;
 		}
-		else {
-			c1.set(c1.x - c2.real(), c1.y - c2.imag()); return c1;
-		}
+		else
+			return Complex(c1.x - c2.real(), c1.y - c2.imag());
 	}
-	friend Complex operator - (double num, Complex c) {
-		if (c.isFA_form) {
-			c.set(num - c.x * cos(c.y), -c.x * sin(c.y), false);
-			c.turn_FA(); return c;
-		}
-		else {
-			c.set(num - c.x, -c.y); return c;
-		}
+	friend Complex operator - (double num, const Complex& c) {
+		return num + (-c);
 	}
-	friend Complex operator - (Complex c, double num) {
-		if (c.isFA_form) {
-			c.set(c.x * cos(c.y) - num, c.x * sin(c.y), false);
-			c.turn_FA(); return c;
-		}
-		else {
-			c.set(c.x - num, c.y); return c;
-		}
+	friend Complex operator - (const Complex& c, double num) {
+		return -num + c;
 	}
-	friend Complex operator * (Complex c1, Complex c2) {
-		if (c1.isFA_form) {
-			c1.set(c1.x * c2.fab(), arg(c1.y + c2.angle())); return c1;
-		}
-		else {
-			c1.set(c1.x * c2.real() - c1.y * c2.imag(), c1.x * c2.imag() + c1.y * c2.real()); return c1;
-		}
+	friend Complex operator * (const Complex& c1, const Complex& c2) {
+		if (c1.isFA_form)
+			return Complex(c1.x * c2.fab(), arg(c1.y + c2.angle()), true);
+		else
+			return Complex(c1.x * c2.real() - c1.y * c2.imag(), c1.x * c2.imag() + c1.y * c2.real());
 	}
-	friend Complex operator * (double num, Complex c) {
-		if (c.isFA_form) {
-			c.set_x(c.x * num);	return c;
-		}
-		else {
-			c.set(c.x * num, c.y * num); return c;
-		}
+	friend Complex operator * (double num, const Complex& c) {
+		if (c.isFA_form)
+			if (num > 0)
+				return Complex(c.x * num, c.y, true);
+			else
+				return Complex(c.x * (-num), arg(c.y + pi), true);
+		else
+			return Complex(c.x * num, c.y * num);
 	}
-	friend Complex operator * (Complex c, double num) {
-		if (c.isFA_form) {
-			c.set_x(c.x * num);	return c;
-		}
-		else {
-			c.set(c.x * num, c.y * num); return c;
-		}
+	friend Complex operator * (const Complex& c, double num) {
+		return num * c;
 	}
-	friend Complex operator / (Complex c1, Complex c2) {
-		if (c2.isZero()) {
-			if (c1.isZero()) {
-				c1.set(NAN, NAN); return c1;
-			}
-			else {
-				c1.set(INFINITY, INFINITY); return c1;
-			}
-		}
-		else if (c1.isFA_form) {
-			c1.set(c1.x / c2.fab(), arg(c1.y - c2.angle())); return c1;
-		}
+	friend Complex operator / (const Complex& c1, const Complex& c2) {
+		if (c1.isFA_form)
+			return Complex(c1.x / c2.fab(), arg(c1.y - c2.angle()), true);
 		else {
 			double temp = c2.real() * c2.real() + c2.imag() * c2.imag();
-			c1.set((c1.x * c2.real() + c1.y * c2.imag()) / temp, (c1.y * c2.real() - c1.x * c2.imag()) / temp); return c1;
+			return Complex((c1.x * c2.real() + c1.y * c2.imag()) / temp, (c1.y * c2.real() - c1.x * c2.imag()) / temp);
 		}
 	}
-	friend Complex operator / (double num, Complex c) {
-		if (c.isZero()) {
-			if (num == 0) {
-				c.set(NAN, NAN); return c;
-			}
-			else {
-				c.set(INFINITY, INFINITY); return c;
-			}
-		}
-		else if (c.isFA_form) {
-			c.set(num / c.x, ((c.y == pi) ? c.y : -c.y));	return c;
-		}
+	friend Complex operator / (double num, const Complex& c) {
+		if (c.isFA_form)
+			if (num > 0)
+				return Complex(num / c.x, ((c.y == pi) ? c.y : -c.y), true);
+			else
+				return Complex((-num) / c.x, arg(((c.y == pi) ? c.y : -c.y) + pi), true);
 		else {
 			double temp = c.x * c.x + c.y * c.y;
-			c.set(c.x * num / temp, -c.y * num / temp); return c;
+			return Complex(c.x * num / temp, -c.y * num / temp);
 		}
 	}
-	friend Complex operator / (Complex c, double num) {
-		if (num == 0) {
-			if (c.isZero()) {
-				c.set(NAN, NAN); return c;
-			}
-			else {
-				c.set(INFINITY, INFINITY); return c;
-			}
-		}
-		else  if (c.isFA_form) {
-			c.set_x(c.x / num);	return c;
-		}
-		else {
-			c.set(c.x / num, c.y / num); return c;
-		}
+	friend Complex operator / (const Complex& c, double num) {
+		return 1 / num * c;
 	}
-	friend Complex operator - (Complex c) {
+
+	friend Complex operator - (const Complex& c) {
 		if (c.isFA_form) {
-			c.set_y(arg(c.y + pi)); return c;
+			return Complex(c.x, arg(c.y + pi), true);
 		}
 		else {
-			c.set(-c.x, -c.y); return c;
+			return Complex(-c.x, -c.y);
 		}
 	}
-	friend bool operator == (Complex c1, Complex c2) {
+	friend bool operator == (const Complex& c1, const Complex& c2) {
 		return ((c1.isFA_form == c2.isFA_form) ? (c1.x == c2.x && c1.y == c2.y) : (c1.real() == c2.real() && c1.imag() == c2.imag()));
 	}
-	friend bool operator == (double num, Complex c2) {
+	friend bool operator == (double num, const Complex& c2) {
 		return (c2.y == 0 && c2.x == num);
 	}
-	friend bool operator == (Complex c2, double num) {
+	friend bool operator == (const Complex& c2, double num) {
 		return (c2.y == 0 && c2.x == num);
 	}
-	friend bool operator != (Complex c1, Complex c2) {
+	friend bool operator != (const Complex& c1, const Complex& c2) {
 		return !(c1 == c2);
 	}
-	friend bool operator != (double num, Complex c2) {
+	friend bool operator != (double num, const Complex& c2) {
 		return (c2.y != 0 || c2.x != num);
 	}
-	friend bool operator != (Complex c2, double num) {
+	friend bool operator != (const Complex& c2, double num) {
 		return (c2.y != 0 || c2.x != num);
 	}
-	friend bool operator > (Complex c1, Complex c2) {
+	friend bool operator > (const Complex& c1, const Complex& c2) {
 		if (c1.y == 0 && c2.y == 0) {
 			return c1.x > c2.x;
 		}
@@ -488,7 +433,7 @@ public:
 			return false;
 		}
 	}
-	friend bool operator > (Complex c, double num) {
+	friend bool operator > (const Complex& c, double num) {
 		if (c.y == 0) {
 			return c.x > num;
 		}
@@ -497,7 +442,7 @@ public:
 			return false;
 		}
 	}
-	friend bool operator > (double num, Complex c) {
+	friend bool operator > (double num, const Complex& c) {
 		if (c.y == 0) {
 			return num > c.x;
 		}
@@ -506,7 +451,7 @@ public:
 			return false;
 		}
 	}
-	friend bool operator < (Complex c1, Complex c2) {
+	friend bool operator < (const Complex& c1, const Complex& c2) {
 		if (c1.y == 0 && c2.y == 0) {
 			return c1.x < c2.x;
 		}
@@ -515,7 +460,7 @@ public:
 			return false;
 		}
 	}
-	friend bool operator < (Complex c, double num) {
+	friend bool operator < (const Complex& c, double num) {
 		if (c.y == 0) {
 			return c.x < num;
 		}
@@ -524,7 +469,7 @@ public:
 			return false;
 		}
 	}
-	friend bool operator < (double num, Complex c) {
+	friend bool operator < (double num, const Complex& c) {
 		if (c.y == 0) {
 			return num < c.x;
 
@@ -534,7 +479,7 @@ public:
 			return false;
 		}
 	}
-	friend bool operator >= (Complex c1, Complex c2) {
+	friend bool operator >= (const Complex& c1, const Complex& c2) {
 		if (c1.y == 0 && c2.y == 0) {
 			return c1.x >= c2.x;
 		}
@@ -543,7 +488,7 @@ public:
 			return false;
 		}
 	}
-	friend bool operator >= (Complex c, double num) {
+	friend bool operator >= (const Complex& c, double num) {
 		if (c.y == 0) {
 			return c.x >= num;
 		}
@@ -552,7 +497,7 @@ public:
 			return false;
 		}
 	}
-	friend bool operator >= (double num, Complex c) {
+	friend bool operator >= (double num, const Complex& c) {
 		if (c.y == 0) {
 			return num >= c.x;
 		}
@@ -561,7 +506,7 @@ public:
 			return false;
 		}
 	}
-	friend bool operator <= (Complex c1, Complex c2) {
+	friend bool operator <= (const Complex& c1, const Complex& c2) {
 		if (c1.y == 0 && c2.y == 0) {
 			return c1.x <= c2.x;
 		}
@@ -570,7 +515,7 @@ public:
 			return false;
 		}
 	}
-	friend bool operator <= (Complex c, double num) {
+	friend bool operator <= (const Complex& c, double num) {
 		if (c.y == 0) {
 			return c.x <= num;
 		}
@@ -579,7 +524,7 @@ public:
 			return false;
 		}
 	}
-	friend bool operator <= (double num, Complex c) {
+	friend bool operator <= (double num, const Complex& c) {
 		if (c.y == 0) {
 			return num <= c.x;
 		}
@@ -589,145 +534,150 @@ public:
 		}
 	}
 
-	friend double fabs(Complex c) {
+	friend double fabs(const Complex& c) {
 		if (c.isFA_form)
 			return fabs(c.x);
 		else
 			return sqrt(c.x * c.x + c.y * c.y);
 	}
-	friend Complex sqrt(Complex c) {
-		if (c.isFA_form) {
-			c.set(sqrt(c.x), c.y / 2); return c;
-		}
+	friend Complex sqrt(const Complex& c) {
+		if (c.isFA_form)
+			return Complex(sqrt(c.x), c.y / 2, true);
 		else {
-			c.set(sqrt(c.fab()), c.angle() / 2, true);
-			c.set(c.x * cos(c.y), c.x * sin(c.y), false); return c;
+			Complex ans(sqrt(c.fab()), c.angle() / 2, true);
+			ans.turn_RI();
+			return ans;
 		}
 	}
-	friend Complex conj(Complex c) {
-		c.set_y(((c.isFA_form && c.y == pi) ? c.y : -c.y)); return c;
+	friend Complex conj(const Complex& c) {
+		return Complex(c.x,((c.isFA_form && c.y == pi) ? c.y : -c.y), c.isFA_form);
 	}
 	
-	friend Complex rotate(Complex c, double theta) {
-		if (c.isFA_form) {
-			c.set_y(arg(c.y + theta)); return c;
-		}
+	friend Complex rotate(const Complex& c, double theta) {
+		if (c.isFA_form)
+			return Complex(c.x, arg(c.y + theta), true);
 		else {
-			c.turn_FA();
-			c = rotate(c, theta);
-			c.set(c.x * cos(c.y), c.x * sin(c.y), false); return c;
+			Complex ans(c);
+			ans.turn_FA();
+			ans = rotate(ans, theta);
+			ans.turn_RI();
+			return ans;
 		}
 	}
-	friend Complex inverse(Complex c) {
-		if (c.isFA_form) {
-			c.set(1 / c.x, (c.y == pi ? c.y : -c.y)); return c;
-		}
+	friend Complex inverse(const Complex& c) {
+		if (c.isFA_form)
+			return Complex(1 / c.x, (c.y == pi ? c.y : -c.y), true);
 		else {
 			double temp = c.x * c.x + c.y * c.y;
-			c.set(c.x / temp, -c.y / temp); return c;
+			return Complex(c.x / temp, -c.y / temp);
 		}
 	}
-	friend Complex exp(Complex c) {
+	friend Complex exp(const Complex& c) {
+		if (c.isFA_form)
+			return Complex(exp(c.x * cos(c.y)), arg(c.x * sin(c.y)), true);
+		else
+			return Complex(exp(c.x)*cos(c.y), exp(c.x)*sin(c.y));
+	}
+	friend Complex pow(const Complex& c, double num) {
+		if (c.isFA_form)
+			return Complex(pow(c.x, num), arg(c.y * num), true);
+		else {
+			Complex ans(c);
+			ans.turn_FA();
+			ans = pow(ans, num);
+			ans.turn_RI();
+			return ans;
+
+		}
+	}
+	friend Complex pow(double num, const Complex& c) {
 		if (c.isFA_form) {
-			c.set(exp(c.x * cos(c.y)), arg(c.x * sin(c.y))); return c;
+			Complex ans(c.x * cos(c.y), c.x * sin(c.y));
+			ans.set(pow(num, ans.x), ans.y * log(num), true);
+			return ans;
 		}
 		else {
-			c.set(exp(c.x)*cos(c.y), exp(c.x)*sin(c.y)); return c;
+			Complex ans(pow(num, c.x), c.y * log(num), true);
+			ans.turn_RI();
+			return ans;
 		}
 	}
-	friend Complex pow(Complex c, double num) {
+	friend Complex log(const Complex& c) {
 		if (c.isFA_form) {
-			c.set(pow(c.x, num), arg(c.y * num)); return c;
+			Complex ans(log(c.x), c.y);
+			ans.turn_FA();
+			return ans;
 		}
 		else {
-			c.turn_FA();
-			c = pow(c, num);
-			c.set(c.x * cos(c.y), c.x * sin(c.y), false); return c;
+			Complex ans(log(sqrt(c.x * c.x + c.y * c.y)), c.angle());
+			return ans;
 		}
 	}
-	friend Complex pow(double num, Complex c) {
-		if (c.isFA_form) {
-			c.set(c.x * cos(c.y), c.x * sin(c.y), false);
-			c.set(pow(num, c.x), c.y * log(num), true); return c;
-		}
-		else {
-			c.set(pow(num, c.x), c.y * log(num), true);
-			c.set(c.x * cos(c.y), c.x * sin(c.y), false); return c;
-		}
-	}
-	friend Complex log(Complex c) {
-		if (c.isFA_form) {
-			c.set(log(c.x), c.y, false);
-			c.turn_FA(); return c;
-		}
-		else {
-			c.set(log(sqrt(c.x * c.x + c.y * c.y)), c.angle()); return c;
-		}
-	}
-	friend Complex log(double num, Complex c) {
+	friend Complex log(double num, const Complex& c) {
 		return 1 / log(num)*log(c);
 	}
-	friend Complex log(Complex c, double num) {
+	friend Complex log(const Complex& c, double num) {
 		return 1 / log(c)*log(num);
 	}
-	friend Complex pow(Complex c1, Complex c2) {
-		double c2_fabs = c2.fab();
-		c2.turn_RI();
+	friend Complex pow(const Complex& c1, const Complex& c2) {
+		Complex temp(c2);
+		double c2_fabs = temp.fab();
+		temp.turn_RI();
 		Complex J(0, 1);
-		return pow(c1, c2.x) * exp(c2.y * J * log(c1));
+		return pow(c1, temp.x) * exp(temp.y * J * log(c1));
 	}
-	friend Complex log(Complex c1, Complex c2) {
+	friend Complex log(const Complex& c1, const Complex& c2) {
 		return 1 / log(c1) * log(c2);
 	}
 
-	friend Complex sin(Complex c) {
+	friend Complex sin(const Complex& c) {
 		Complex J(0, 1);
 		return (exp(c * J) - exp(-c * J)) / (2 * J);
 	}
-	friend Complex cos(Complex c) {
+	friend Complex cos(const Complex& c) {
 		Complex J(0, 1);
 		return (exp(c * J) + exp(-c * J)) / 2;
 	}
-	friend Complex tan(Complex c) {
+	friend Complex tan(const Complex& c) {
 		Complex J(0, 1);
 		return (exp(c * J) - exp(-c * J)) / (exp(c * J) + exp(-c * J)) / J;
 	}
-	friend Complex cot(Complex c) {
+	friend Complex cot(const Complex& c) {
 		Complex J(0, 1);
 		return (exp(c * J) + exp(-c * J)) * J / (exp(c * J) - exp(-c * J));
 	}
-	friend Complex sec(Complex c) {
+	friend Complex sec(const Complex& c) {
 		Complex J(0, 1);
 		return 2 / (exp(c * J) + exp(-c * J));
 	}
-	friend Complex asin(Complex c) {
+	friend Complex asin(const Complex& c) {
 		Complex J(0, 1);
 		return log(c * J + sqrt(1 - c * c)) * (-J);
 	}
-	friend Complex acos(Complex c) {
+	friend Complex acos(const Complex& c) {
 		Complex J(0, 1);
 		return log(c + sqrt(1 - c * c) * J) * (-J);
 	}
-	friend Complex atan(Complex c) {
+	friend Complex atan(const Complex& c) {
 		Complex J(0, 1);
 		return log((-c + J) / (c + J)) / (2 * J);
 	}
-	friend Complex sinh(Complex c) {
+	friend Complex sinh(const Complex& c) {
 		return (exp(c) - exp(-c)) / 2;
 	}
-	friend Complex cosh(Complex c) {
+	friend Complex cosh(const Complex& c) {
 		return (exp(c) + exp(-c)) / 2;
 	}
-	friend Complex tanh(Complex c) {
+	friend Complex tanh(const Complex& c) {
 		return (exp(c) + exp(-c)) / (exp(c) - exp(-c));
 	}
-	friend Complex asinh(Complex c) {
+	friend Complex asinh(const Complex& c) {
 		return log(c + sqrt(c*c + 1));
 	}
-	friend Complex acosh(Complex c) {
+	friend Complex acosh(const Complex& c) {
 		return log(c + sqrt(c*c - 1));
 	}
-	friend Complex atanh(Complex c) {
+	friend Complex atanh(const Complex& c) {
 		return log((1 + c) / (1 - c)) / 2;
 	}
 };
@@ -738,7 +688,7 @@ Complex J2(1, pi / 2, 1);
 //Matrix class
 template<class T> class Matrix
 {
-private:
+protected:
 	int r;
 	int c;
 	T* e;
@@ -860,22 +810,22 @@ public:
 				e[i] = T(i);
 		}
 	}
-	Matrix(const Matrix<T>& m) {
-		r = m.r;
-		c = m.c;
+	Matrix(const Matrix<T>& A) {
+		r = A.r;
+		c = A.c;
 		e = new T[r*c];
-		for (int i = 0; i < r*c; i++) {
-			e[i] = m.e[i];
-		}
+		for (int i = 0; i < r*c; i++)
+			e[i] = A.e[i];
 	}
-	Matrix<T> operator = (Matrix<T> m) {
-		r = m.r;
-		c = m.c;
+	Matrix<T> operator = (const Matrix<T>& A) {
+		T *temp = e;
+		r = A.r;
+		c = A.c;
 		e = new T[r*c];
-		for (int i = 0; i < r*c; i++) {
-			e[i] = m.e[i];
-		}
-		return m;
+		delete[] temp;
+		for (int i = 0; i < r*c; i++)
+			e[i] = A.e[i];
+		return A;
 	}
 	~Matrix() {
 		delete[] e;
@@ -887,52 +837,48 @@ public:
 	}
 
 	//fetch functions
-	int row() {
+	int row() const {
 		return r;	// return the number of row
 	}
-	int col() {
+	int col() const {
 		return c;	// return the number of column
 	}
-	int pos_ind(int row, int column) {
+	int pos_ind(int row, int column) const {
 		return row * c + column;
 	}
-	T ele(int pos) {
+	T ele(int pos) const {
 		return e[pos - 1];	//return the element in positon (pos)
 	}
-	T ele(int row, int column) {
+	T ele(int row, int column) const {
 		return e[(row - 1) * c + column - 1];	//return the element in positon (row, column)
 	}
-	T ele_ind(int pos) {
+	T ele_ind(int pos) const {
 		return e[pos];	//return the element in positon (pos)
 	}
-	T ele_ind(int row, int column) {
+	T ele_ind(int row, int column) const {
 		return e[row * c + column];	//return the element in positon (row, column)
 	}
-	Matrix<T> get_row(int row) {	//return the row vector in row (row)
+	Matrix<T> get_row(int row) const {	//return the row vector in row (row)
 		Matrix<T> result(1, c);
 		row--;
 		for (int j = 0; j < c; j++)
 			result.set_e_ind(j, e[row * c + j]);
 		return result;
 	}
-	Matrix<T> get_col(int column) {	//return the column vector in column (column)
+	Matrix<T> get_col(int column) const {	//return the column vector in column (column)
 		Matrix<T> result(r, 1);
 		column--;
 		for (int i = 0; i < r; i++)
 			result.set_e_ind(i, e[i * c + column]);
 		return result;
 	}
-	Matrix<T> flat(bool to_row = 1) {	//return the [row/column] vector of all elements
-		if (to_row) {
-			Matrix<T> result(1, r * c, e);
-			return result;
-		}
-		else {
-			Matrix<T> result(r * c, 1, e);
-			return result;
-		}
+	Matrix<T> flat(bool to_row = 1) const {	//return the [row/column] vector of all elements
+		if (to_row)
+			return Matrix<T>(1, r * c, e);
+		else
+			return Matrix<T>(r * c, 1, e);
 	}
-	Matrix<T> get_part(int row_start, int row_end, int column_start, int column_end) {
+	Matrix<T> get_part(int row_start, int row_end, int column_start, int column_end) const {
 		//return the matrix in a certain part (row_start to row_end, column_start to column_end)
 
 		row_start--;
@@ -946,7 +892,7 @@ public:
 			}
 		return result;
 	}
-	Matrix<T> get_diag() {	//return the row vector of diagonal elements
+	Matrix<T> get_diag() const {	//return the row vector of diagonal elements
 		if (r <= c) {
 			Matrix<T> result(1, r);
 			for (int i = 0; i < r; i++)
@@ -961,13 +907,13 @@ public:
 		}
 	}
 
-	Matrix<T> get_row_ind(int row) {	//return the row vector in row (row)
+	Matrix<T> get_row_ind(int row) const {	//return the row vector in row (row)
 		Matrix<T> result(1, c);
 		for (int j = 0; j < c; j++)
 			result.set_e_ind(j, e[row * c + j]);
 		return result;
 	}
-	Matrix<T> get_col_ind(int column) {	//return the column vector in column (column)
+	Matrix<T> get_col_ind(int column) const {	//return the column vector in column (column)
 		Matrix<T> result(r, 1);
 		for (int i = 0; i < r; i++)
 			result.set_e_ind(i, e[i * c + column]);
@@ -975,7 +921,7 @@ public:
 	}
 
 	//the next 14 functions return the element with [max/min] [fabs] value
-	T max_ele() {	//return the max element in matrix
+	T max_ele() const {	//return the max element in matrix
 		T max = e[0];
 		double max_fabs = fabs(max);
 		double temp_fabs;
@@ -988,7 +934,7 @@ public:
 		}
 		return max;
 	}
-	T max_ele(int &position) {	//return the max element and its position (position) in matrix
+	T max_ele(int &position) const {	//return the max element and its position (position) in matrix
 		T max = e[0];
 		double max_fabs = fabs(max);
 		double temp_fabs;
@@ -1003,7 +949,7 @@ public:
 		}
 		return max;
 	}
-	T max_ele(int &row, int &column) {	//return the max element and its position (row, column) in matrix
+	T max_ele(int &row, int &column) const {	//return the max element and its position (row, column) in matrix
 		T max = e[0];
 		double max_fabs = fabs(max);
 		double temp_fabs;
@@ -1021,7 +967,7 @@ public:
 			}
 		return max;
 	}
-	T min_ele() {	//return the min element in matrix
+	T min_ele() const {	//return the min element in matrix
 		T min = e[0];
 		double min_fabs = fabs(min);
 		double temp_fabs;
@@ -1034,7 +980,7 @@ public:
 		}
 		return min;
 	}
-	T min_ele(int &position) {	//return the min element and its position (position) in matrix
+	T min_ele(int &position) const {	//return the min element and its position (position) in matrix
 		T min = e[0];
 		double min_fabs = fabs(min);
 		double temp_fabs;
@@ -1049,7 +995,7 @@ public:
 		}
 		return min;
 	}
-	T min_ele(int &row, int &column) {	//return the min element and its position (row, column) in matrix
+	T min_ele(int &row, int &column) const {	//return the min element and its position (row, column) in matrix
 		T min = e[0];
 		double min_fabs = fabs(min);
 		double temp_fabs;
@@ -1067,7 +1013,7 @@ public:
 			}
 		return min;
 	}
-	T max_row_ele(int row) {
+	T max_row_ele(int row) const {
 		row--;
 		T max = e[row * c];
 		double max_fabs = fabs(max);
@@ -1081,7 +1027,7 @@ public:
 		}
 		return max;
 	}
-	T max_row_ele(int row, int &position) {
+	T max_row_ele(int row, int &position) const {
 		row--;
 		T max = e[row * c];
 		double max_fabs = fabs(max);
@@ -1097,7 +1043,7 @@ public:
 		}
 		return max;
 	}
-	T min_row_ele(int row) {
+	T min_row_ele(int row) const {
 		row--;
 		T min = e[row * c];
 		double min_fabs = fabs(min);
@@ -1111,7 +1057,7 @@ public:
 		}
 		return min;
 	}
-	T min_row_ele(int row, int &position) {
+	T min_row_ele(int row, int &position) const {
 		row--;
 		T min = e[row * c];
 		double min_fabs = fabs(min);
@@ -1127,7 +1073,7 @@ public:
 		}
 		return min;
 	}
-	T max_col_ele(int column) {
+	T max_col_ele(int column) const {
 		column--;
 		T max = e[column];
 		double max_fabs = fabs(max);
@@ -1141,7 +1087,7 @@ public:
 		}
 		return max;
 	}
-	T max_col_ele(int column, int &position) {
+	T max_col_ele(int column, int &position) const {
 		column--;
 		T max = e[column];
 		double max_fabs = fabs(max);
@@ -1157,7 +1103,7 @@ public:
 		}
 		return max;
 	}
-	T min_col_ele(int column) {
+	T min_col_ele(int column) const {
 		column--;
 		T min = e[column];
 		double min_fabs = fabs(min);
@@ -1171,7 +1117,7 @@ public:
 		}
 		return min;
 	}
-	T min_col_ele(int column, int &position) {
+	T min_col_ele(int column, int &position) const {
 		column--;
 		T min = e[column];
 		double min_fabs = fabs(min);
@@ -1188,7 +1134,7 @@ public:
 		return min;
 	}
 
-	T max_ele_ind(int &position) {	//return the max element and its position (position) in matrix
+	T max_ele_ind(int &position) const {	//return the max element and its position (position) in matrix
 		T max = e[0];
 		double max_fabs = fabs(max);
 		double temp_fabs;
@@ -1203,7 +1149,7 @@ public:
 		}
 		return max;
 	}
-	T max_ele_start_from_ind(int start_position,int &position) {
+	T max_ele_start_from_ind(int start_position,int &position) const {
 		/* return the max element and its position (position) in matrix
 		   start from the element with positoin (start_position) */
 		T max = e[start_position];
@@ -1221,7 +1167,7 @@ public:
 		}
 		return max;
 	}
-	T max_col_ele_ind(int column, int row_start, int& position) {
+	T max_col_ele_start_from_ind(int column, int row_start, int& position) const {
 		int start_pos = row_start * c + column;
 		T max = e[start_pos];
 		double max_fabs = fabs(max);
@@ -1240,10 +1186,10 @@ public:
 	}
 
 	//judge functions
-	bool isEmpty() {
+	bool isEmpty() const {
 		return (r == 0 || c == 0);
 	}
-	bool isZero() {
+	bool isZero() const {
 		for (int i = 0; i < r; i++)
 			for (int j = 0; j < c; j++)
 				if (e[i*c + j] == T(0));
@@ -1252,16 +1198,16 @@ public:
 		return true;
 
 	}
-	bool isSquared() {
+	bool isSquared() const {
 		return (r == c);
 	}
-	bool isThin() {
+	bool isThin() const {
 		return (r > c);
 	}
-	bool isFat() {
+	bool isFat() const {
 		return (r < c);
 	}
-	bool isIdentity() {
+	bool isIdentity() const {
 		if (r == c) {
 			for (int i = 0; i < r; i++)
 				for (int j = 0; j < c; j++)
@@ -1276,28 +1222,28 @@ public:
 			return false;
 		return true;
 	}
-	bool isDiagonal() {
+	bool isDiagonal() const {
 		for (int i = 0; i < r; i++)
 			for (int j = 0; j < c; j++)
 				if (i != j)
 					if (e[i*c + j] != T(0))return false;
 		return true;
 	}
-	bool isUpper() {
+	bool isUpper() const {
 		for (int i = 0; i < r; i++)
 			for (int j = 0; j < c; j++)
 				if (i > j)
 					if (e[i*c + j] != T(0))return false;
 		return true;
 	}
-	bool isLower() {
+	bool isLower() const {
 		for (int i = 0; i < r; i++)
 			for (int j = 0; j < c; j++)
 				if (i < j)
 					if (e[i*c + j] != T(0))return false;
 		return true;
 	}
-	bool isSymmetric() {
+	bool isSymmetric() const {
 		if (r == c) {
 			for (int i = 0; i < r; i++)
 				for (int j = i + 1; j < c; j++)
@@ -1307,7 +1253,7 @@ public:
 		else
 			return false;
 	}
-	bool isHermitian() {
+	bool isHermitian() const {
 		if (T != Complex)
 			return isSymmetric();
 		else {
@@ -1321,14 +1267,14 @@ public:
 				return false;
 		}
 	}
-	bool isVector() {
+	bool isVector() const {
 		return (r == 1 || c == 1);
 	}
-	bool isSingle() {
+	bool isSingle() const {
 		int ran = rank();
 		return (ran != r && ran != c);
 	}
-	bool isPositiveDefinite() {
+	bool isPositiveDefinite() const {
 		if (r != c)return false;
 		Matrix<T> U, Sigma, V_T;
 		svd((*this), U, Sigma, V_T);
@@ -1345,7 +1291,7 @@ public:
 			}
 		return true;
 	}
-	bool isSemiPositiveDefinite() {
+	bool isSemiPositiveDefinite() const {
 		if (r != c)return false;
 		Matrix<T> U, Sigma, V_T;
 		svd((*this), U, Sigma, V_T);
@@ -1370,6 +1316,9 @@ public:
 	void set_c(int column) {
 		c = column;
 	}
+	void set_size(int row, int column) {
+		change_size(row, column);
+	}
 	void set_e(int pos, T element) {
 		e[pos - 1] = element;
 	}
@@ -1381,13 +1330,22 @@ public:
 	}
 	void set_e_ind(int row, int column, T element) {
 		e[row * c + column] = element;
+	}	
+	void set_e_ind(int pos, const Matrix<T>& elements) {
+		int size_all = elements.row() * elements.col();
+		if (pos + size_all > r*c) {
+			cout << "size error, set_e_ind failed" << endl;
+			return;
+		}
+		for (int i = 0; i < size_all; i++)
+			e[pos + i] = elements.ele_ind(i);
 	}
-	void set_e(T* elements) {
+	void set_e(const Matrix<T>& elements) {
 		int count = r * c;
 		for (int i = 0; i < count; i++)
 			e[i] = elements.ele_ind(i);
 	}
-	void set_diag(Matrix<T> elements) {
+	void set_diag(const Matrix<T>& elements) {
 		int diag_pos = 0;
 		if (r <= c)
 			for (int i = 0; i < r; i++) {
@@ -1477,19 +1435,19 @@ public:
 			column_2 += c;
 		}
 	}
-	void change_row(int row, Matrix<T> elements) {
+	void change_row(int row, const Matrix<T>& elements) {
 		row = (row - 1)*c;
 		for (int j = 0; j < c; j++)
 			e[row++] = elements.ele_ind(j);
 	}
-	void change_col(int column, Matrix<T> elements) {
+	void change_col(int column, const Matrix<T>& elements) {
 		column--;
 		for (int i = 0; i < r; i++) {
 			e[column] = elements.ele_ind(i);
 			column += c;
 		}
 	}
-	friend Matrix<T> arrange_row(Matrix<T> A,Matrix<int> permutation) {	//permutation is vector
+	friend Matrix<T> arrange_row(const Matrix<T>& A, const Matrix<int>& permutation) {	//permutation is vector
 		Matrix<T> ans(A.r,A.c);
 		int row_pos;
 		int row_pos2;
@@ -1501,7 +1459,7 @@ public:
 		}
 		return ans;
 	}
-	friend Matrix<T> arrange_col(Matrix<T> A, Matrix<int> permutation) {	//permutation is vector
+	friend Matrix<T> arrange_col(const Matrix<T>& A, const Matrix<int>& permutation) {	//permutation is vector
 		Matrix<T> ans(A.r, A.c);
 		int col_pos;
 		int col_pos2;
@@ -1538,7 +1496,7 @@ public:
 		else
 			cout << "size error, append failed" << endl;
 	}
-	void append_row(Matrix<T> elements) {
+	void append_row(const Matrix<T>& elements) {
 		if (elements.get_col() != c) {
 			cout << "size error, append failed" << endl;
 			return;
@@ -1558,7 +1516,7 @@ public:
 		r++;
 		delete[]temp;
 	}
-	void append_col(Matrix<T> elements) {
+	void append_col(const Matrix<T>& elements) {
 		if (elements.get_row() != r) {
 			cout << "size error, append failed" << endl;
 			return;
@@ -1642,12 +1600,12 @@ public:
 		e[position_1] = e[position_2];
 		e[position_2] = temp;
 	}
-	void change_row_ind(int row, Matrix<T> elements) {
+	void change_row_ind(int row, const Matrix<T>& elements) {
 		row = row * c;
 		for (int j = 0; j < c; j++)
 			e[row++] = elements.ele_ind(j);
 	}
-	void change_col_ind(int column, Matrix<T> elements) {
+	void change_col_ind(int column, const Matrix<T>& elements) {
 		for (int i = 0; i < r; i++) {
 			e[column] = elements.ele_ind(i);
 			column += c;
@@ -1677,7 +1635,7 @@ public:
 			column_2 += c;
 		}
 	}
-	friend Matrix<T> arrange_col_ind(Matrix<T> A, Matrix<int> permutation) {	//permutation is vector
+	friend Matrix<T> arrange_col_ind(const Matrix<T>& A, const Matrix<int>& permutation) {	//permutation is vector
 		Matrix<T> ans(A.r, A.c);
 		int col_pos;
 		int col_pos2;
@@ -1692,7 +1650,7 @@ public:
 		}
 		return ans;
 	}
-	friend Matrix<T> arrange_row_ind(Matrix<T> A, Matrix<int> permutation) {	//permutation is vector
+	friend Matrix<T> arrange_row_ind(const Matrix<T>& A, const Matrix<int>& permutation) {	//permutation is vector
 		Matrix<T> ans(A.r, A.c);
 		int row_pos;
 		int row_pos2;
@@ -1706,17 +1664,18 @@ public:
 	}
 
 	//input and output(\)
-	void print() {
+	void print() const {
+		cout << setprecision(4);
 		int row_pos;
 		for (int i = 0; i < r; i++) {
 			row_pos = i * c;
 			for (int j = 0; j < c; j++) {
-				cout << setprecision(4) << setw(14) << e[row_pos + j];
+				cout << setw(14) << e[row_pos + j];
 			}
 			cout << endl;
 		}
 	}
-	void print_science() {
+	void print_science() const {
 		int row_pos;
 		for (int i = 0; i < r; i++) {
 			row_pos = i * c;
@@ -1752,13 +1711,14 @@ public:
 		getchar();		//eliminate the enter type
 		cut(row1, column1);
 	}
-	friend ostream& operator << (ostream& out, Matrix<T> A) {
+	friend ostream& operator << (ostream& out,const Matrix<T>& A) {
 		out << endl;
+		out << setprecision(4);
 		int row_pos;
 		for (int i = 0; i < A.r; i++) {
 			row_pos = i * A.c;
 			for (int j = 0; j < A.c; j++) {
-				out << setprecision(4) << setw(14) << A.e[row_pos + j];
+				out << setw(14) << A.e[row_pos + j];
 			}
 			out << endl;
 		}
@@ -1791,7 +1751,7 @@ public:
 		A.cut(row1, column1);
 		return in;
 	}
-	void print_file(string file_name,int mode=ios::out) {	//ios::app [append]. ios::binary [in binary form]
+	void print_file(string file_name,int mode=ios::out) const {	//ios::app [append]. ios::binary [in binary form]
 
 		//if file type is "dat", write in binary.
 		string f_type = file_type(file_name);
@@ -1816,17 +1776,18 @@ public:
 		}
 		else {
 			fout << r << ' ' << c << endl;
+			fout << setprecision(4);
 			for (int i = 0; i < r; i++) {
 				row_pos = i * c;
 				for (int j = 0; j < c; j++) {
-					fout << setprecision(4) << setw(14) << e[row_pos + j];
+					fout << setw(14) << e[row_pos + j];
 				}
 				fout << endl;
 			}
 			fout.close();
 		}
 	}
-	void print_file_science(const char* file_name,const char* mode="w") {	//"a" [append to the file].
+	void print_file_science(const char* file_name,const char* mode="w") const {	//"a" [append to the file].
 		FILE *fp = fopen(file_name, mode);
 		
 		int row_pos;
@@ -1862,7 +1823,7 @@ public:
 	}
 
 	//compute functions(return a new matrix if can)
-	T norm_1() {
+	T norm_1() const {
 		if (isVector()) {
 			int size_all = r * c;
 			T sum_fabs = T(0);
@@ -1885,10 +1846,9 @@ public:
 					ans = sum;
 			}
 			return ans;
-		}
-		
+		}		
 	}
-	T norm_2() {
+	T norm_2() const {
 		if (isVector()) {
 			int size_all = r * c;
 			T sum_fabs_2 = T(0);
@@ -1902,7 +1862,7 @@ public:
 			return fabs(Sigma.ele_ind(0));
 		}
 	}
-	T norm_infinity() {
+	T norm_infinity() const {
 		if (isVector())
 			return max_ele();
 		else {
@@ -1920,7 +1880,7 @@ public:
 			return ans;
 		}
 	}
-	T det() {
+	T det() const {
 		if (isSquared()) {
 			Matrix<int> P;
 			Matrix<T> L, U;
@@ -1938,7 +1898,7 @@ public:
 			return T(0);
 		}
 	}
-	int rank() {
+	int rank() const {
 		int ans = 0;
 		Matrix<T> Q, R;
 		QR((*this), Q, R);
@@ -1949,7 +1909,18 @@ public:
 		}
 		return ans;
 	}
-	friend Matrix<T> operator + (Matrix<T> A, Matrix<T> B) {
+	T condition_num() const {
+		if (r==c) {
+			Matrix<T> lambda = eig_val((*this));
+			return fabs(lambda.ele_ind(0) / lambda.ele_ind(r-1));
+		}
+		else {
+			Matrix<T> U, Sigma, V_T;
+			svd((*this), U, Sigma, V_T);
+			return fabs(Sigma.ele_ind(0) / Sigma.ele_ind(((r > c) ? ((c - 1)*c + c - 1) : ((r - 1)*c + r - 1))));
+		}
+	}
+	friend Matrix<T> operator + (const Matrix<T>& A, const Matrix<T>& B) {
 		if (A.r == B.r && A.c == B.c) {
 			Matrix<T> ans(A.r, A.c);
 			for (int i = 0; i < A.r* A.c; i++)
@@ -1957,24 +1928,20 @@ public:
 			return ans;
 		}
 		else {
-			Matrix<T> ans;
 			cout << "size error, add failed" << endl;
-			return ans;
+			return Matrix<T>();
 		}
 	}
-	friend Matrix<T> operator + (T num, Matrix<T> A) {
+	friend Matrix<T> operator + (T num, const Matrix<T>& A) {
 		Matrix<T> ans(A.r, A.c);
 		for (int i = 0; i < A.r* A.c; i++)
 			ans.e[i] = A.e[i] + num;
 		return ans;
 	}
-	friend Matrix<T> operator + (Matrix<T> A, T num) {
-		Matrix<T> ans(A.r, A.c);
-		for (int i = 0; i < A.r* A.c; i++)
-			ans.e[i] = A.e[i] + num;
-		return ans;
+	friend Matrix<T> operator + (const Matrix<T>& A, T num) {
+		return num + A;
 	}
-	friend Matrix<T> operator - (Matrix<T> A, Matrix<T> B) {
+	friend Matrix<T> operator - (const Matrix<T>& A, const Matrix<T>& B) {
 		if (A.r == B.r && A.c == B.c) {
 			Matrix<T> ans(A.r, A.c);
 			for (int i = 0; i < A.r* A.c; i++)
@@ -1982,24 +1949,20 @@ public:
 			return ans;
 		}
 		else {
-			Matrix<T> ans;
 			cout << "size error, minus failed" << endl;
-			return ans;
+			return Matrix<T>();
 		}
 	}
-	friend Matrix<T> operator - (T num, Matrix<T> A) {
+	friend Matrix<T> operator - (T num, const Matrix<T>& A) {
 		Matrix<T> ans(A.r, A.c);
 		for (int i = 0; i < A.r* A.c; i++)
 			ans.e[i] = num - A.e[i];
 		return ans;
 	}
-	friend Matrix<T> operator - (Matrix<T> A, T num) {
-		Matrix<T> ans(A.r, A.c);
-		for (int i = 0; i < A.r* A.c; i++)
-			ans.e[i] = A.e[i] - num;
-		return ans;
+	friend Matrix<T> operator - (const Matrix<T>& A, T num) {
+		return -num + A;
 	}
-	friend Matrix<T> operator * (Matrix<T> A, Matrix<T> B) {
+	friend Matrix<T> operator * (const Matrix<T>& A, const Matrix<T>& B) {
 		if (A.c == B.r) {
 			Matrix<T> ans(A.r, B.c);
 			int row_pos;
@@ -2020,20 +1983,20 @@ public:
 			return ans;
 		}
 		else {
-			Matrix<T> ans;
 			cout << "size error, multiply failed" << endl;
-			return ans;
+			return Matrix<T>();
 		}
 	}
-	friend Matrix<T> operator * (T num, Matrix<T> A) {
-		A.scale(num);
-		return A;
+	friend Matrix<T> operator * (T num, const Matrix<T>& A) {
+		Matrix<T> ans(A.r, A.c);
+		for (int i = 0; i < A.r* A.c; i++)
+			ans.e[i] = A.e[i] * num;
+		return ans;
 	}
-	friend Matrix<T> operator * (Matrix<T> A, T num) {
-		A.scale(num);
-		return A;
+	friend Matrix<T> operator * (const Matrix<T>& A, T num) {
+		return num * A;
 	}
-	friend T dot_product(Matrix<T> A, Matrix<T> B) {
+	friend T dot_product(const Matrix<T>& A, const Matrix<T>& B) {
 		int size_all = A.r * A.c;
 		T ans = T(0);
 		if (size_all == B.r * B.c) {
@@ -2046,7 +2009,7 @@ public:
 			return ans;
 		}
 	}
-	friend Matrix<T> dot_time(Matrix<T> A, Matrix<T> B) {
+	friend Matrix<T> dot_time(const Matrix<T>& A, const Matrix<T>& B) {
 		int size_all = A.r * A.c;
 		if (size_all == B.r * B.c) {
 			Matrix<T> ans(A.r, A.c);
@@ -2055,12 +2018,11 @@ public:
 			return ans;
 		}
 		else {
-			Matrix<T> ans;
 			cout << "size error, dot_time failed" << endl;
-			return ans;
+			return Matrix<T>();
 		}
 	}
-	friend int diff_num(Matrix<T> A, Matrix<T> B) {
+	friend int diff_num(const Matrix<T>& A, const Matrix<T>& B) {
 		//the function return the number of different elements of the 2 matrices
 		int size_all = A.r * A.c;
 		if (size_all == B.r * B.c) {
@@ -2076,7 +2038,7 @@ public:
 		}
 	}
 
-	friend Matrix<T> L_inv(Matrix<T> L) {
+	friend Matrix<T> L_inv(const Matrix<T>& L) {
 		if (L.r == L.c) {
 			Matrix<T> D(1, L.r, '1');	//diagonal
 			int row_pos;
@@ -2116,19 +2078,18 @@ public:
 			return ans;
 		}
 		else {
-			Matrix<T> ans;
 			cout << "size error, L_inv failed" << endl;
-			return ans;
+			return Matrix<T>();
 		}
 
 	}
-	friend Matrix<T> U_inv(Matrix<T> U) {
-		U=transpose(U);	//U^T
-		U = L_inv(U);	//(U^T)^(-1)
-		U=transpose(U);	//(U^T)^(-1)^T
-		return U;
+	friend Matrix<T> U_inv(const Matrix<T>& U) {
+		Matrix<T> ans;
+		ans =transpose(U);	//U^T
+		ans = L_inv(ans);	//(U^T)^(-1)
+		return transpose(ans);	//(U^T)^(-1)^T
 	}
-	friend bool LU(Matrix<T> A, Matrix<int>& P, Matrix<T>& L, Matrix<T>& U) {	//return if the times of permutation is odd
+	friend bool LU(const Matrix<T>& A, Matrix<int>& P, Matrix<T>& L, Matrix<T>& U) {	//return if the times of permutation is odd
 		if (A.r == A.c) {
 			P = Matrix<int>(1, A.r, 'N');
 			L = Matrix<T>(A.r, A.c, 'i');
@@ -2139,7 +2100,7 @@ public:
 			bool ans = false;
 			T temp;
 			for (int i = 0; i < A.c; i++) {
-				temp = U.max_col_ele_ind(i, i, permute);
+				temp = U.max_col_ele_start_from_ind(i, i, permute);
 				if (temp == T(0)) {
 					cout << "warning: singular" << endl;
 					continue;
@@ -2168,11 +2129,11 @@ public:
 			return false;
 		}
 	}
-	friend Matrix<T> inv(Matrix<T> A) {
+	friend Matrix<T> inv(const Matrix<T>& A) {
 		Matrix<int> P;
-		Matrix<T> L, U;
+		Matrix<T> L, U, ans;
 		LU(A, P, L, U);
-		A = U_inv(U) * L_inv(L);
+		ans = U_inv(U) * L_inv(L);
 
 		//changing P to column arrange number
 		Matrix<int> P_copy(P);
@@ -2180,25 +2141,22 @@ public:
 			P.set_e_ind(P_copy.ele_ind(i), i);
 		}
 
-		A = arrange_col_ind(A, P);
-		return A;
+		return arrange_col_ind(ans, P);
 	}
 
-	friend Matrix<T> operator / (Matrix<T> A, Matrix<T> B) {
+	friend Matrix<T> operator / (const Matrix<T>& A, const Matrix<T>& B) {
 		return A * inv(B);
 	}
-	friend Matrix<T> operator / (double num, Matrix<T> A) {
+	friend Matrix<T> operator / (double num, const Matrix<T>& A) {
 		return num * inv(A);
 	}
-	friend Matrix<T> operator / (Matrix<T> A, double num) {
-		A.scale(num);
-		return A;
+	friend Matrix<T> operator / (const Matrix<T>& A, double num) {
+		return 1 / num * A;
 	}
-	friend Matrix<T> operator - (Matrix<T> A) {
-		A.scale(T(-1));
-		return A;
+	friend Matrix<T> operator - (const Matrix<T>& A) {
+		return -1 * A;
 	}
-	friend bool operator == (Matrix<T> A, Matrix<T> B) {
+	friend bool operator == (const Matrix<T>& A, const Matrix<T>& B) {
 		if (A.r == B.r && A.c == B.c) {
 			int size_all = A.r * A.c;
 			for (int i = 0; i < size_all; i++)
@@ -2209,11 +2167,11 @@ public:
 		else
 			return false;
 	}
-	friend bool operator != (Matrix<T> A, Matrix<T> B) {
+	friend bool operator != (const Matrix<T>& A, const Matrix<T>& B) {
 		return !(A == B);
 	}
 
-	friend void QR(Matrix<T> A, Matrix<T>& Q, Matrix<T>& R) {
+	friend void QR(const Matrix<T>& A, Matrix<T>& Q, Matrix<T>& R) {
 		Q = A;
 		R = Matrix<T>(A.c, A.c, '0');
 		int row_pos;
@@ -2248,13 +2206,20 @@ public:
 				A.add_diag(shift);
 			}
 			Matrix<T> ans = A.get_diag();
+
+			// arrange the eigen_Values
+			int pos;
+			for (int j = 0; j < A.r; j++) {
+				ans.max_ele_start_from_ind(j, pos);
+				ans.switch_ele_ind(j, pos);
+			}
 			return ans;
 		}
 		else {
-			Matrix<T> ans;
 			cout << "size error, get eigen_val failed" << endl;
-			return ans;
+			return Matrix<T>();
 		}
+
 		
 	}
 	friend void eig_shift_inv(Matrix<T> A, T shift, T& eigen_value, Matrix<T>& eigen_Vector,int iter=50) {
@@ -2277,7 +2242,7 @@ public:
 		else
 			cout << "size error, [eig_shift_inv] failed" << endl;
 	}
-	friend void eig(Matrix<T> A, Matrix<T>& eigen_Values, Matrix<T>& eigen_Vectors) {
+	friend void eig(const Matrix<T>& A, Matrix<T>& eigen_Values, Matrix<T>& eigen_Vectors) {
 		//the output eigenvectors are listed by column.
 
 		if (A.r == A.c) {
@@ -2289,19 +2254,11 @@ public:
 				temp.unitize();
 				eigen_Vectors.change_col_ind(i, temp);
 			}
-			
-			// arrange the eigen_Values and eigen_Vectors
-			int pos;
-			for (int j = 0; j < A.r; j++) {
-				eigen_Values.max_ele_start_from_ind(j, pos);
-				eigen_Values.switch_ele_ind(j, pos);
-				eigen_Vectors.switch_col_ind(j, pos);
-			}
 		}
 		else
 			cout << "size error, [eig] failed" << endl;
 	}
-	friend void svd(Matrix<T> A, Matrix<T>& U, Matrix<T>& Sigma, Matrix<T>& V_T) {
+	friend void svd(const Matrix<T>& A, Matrix<T>& U, Matrix<T>& Sigma, Matrix<T>& V_T) {
 		if (A.r == A.c) {
 			Matrix<T> eig_Vals;
 			Sigma = Matrix(A.r, A.c, '0');
@@ -2341,7 +2298,7 @@ public:
 	//failed to find the complex eigenvalues. (eig_val, eig_shift_inv, eig, svd)
 
 	//extend functions (return a new matrix)
-	friend Matrix<T> transpose(Matrix<T> A) {
+	friend Matrix<T> transpose(const Matrix<T>& A) {
 		Matrix<T> ans(A.c, A.r);
 		int row_pos;
 		int col_pos;
@@ -2355,7 +2312,7 @@ public:
 		}
 		return ans;
 	}
-	friend Matrix<T> Hermit(Matrix<T> A) {
+	friend Matrix<T> Hermit(const Matrix<T>& A) {
 		if (type(A.e[0]) == 'C') {
 			Matrix<T> ans(A.c, A.r);
 			int row_pos;
@@ -2373,7 +2330,7 @@ public:
 		else
 			return transpose(A);
 	}
-	friend Matrix<T> extend_block(Matrix<T> A, Matrix<T> B) {
+	friend Matrix<T> extend_block(const Matrix<T>& A, const Matrix<T>& B) {
 		int row_all = A.r + B.r;
 		int column_all = A.c + B.c;
 		int row_pos;
@@ -2391,7 +2348,7 @@ public:
 		}
 		return ans;
 	}
-	friend Matrix<T> combine(Matrix<T> A, Matrix<T> B, Matrix<T> C, Matrix<T> D) {
+	friend Matrix<T> combine(const Matrix<T>& A, const Matrix<T>& B, const Matrix<T>& C, const Matrix<T>& D) {
 		if (A.r == B.r && A.c == C.c && B.c == D.c && C.r == D.r) {
 			int row_all = A.r + C.r;
 			int column_all = A.c + B.c;
@@ -2413,10 +2370,228 @@ public:
 			return ans;
 		}
 		else {
-			Matrix ans;
 			cout << "size error, combine failed" << endl;
-			return ans;
+			return Matrix<T>();
+		}		
+	}
+	friend Matrix<T> extend_row_copy(const Matrix<T>& A, int number_of_copies) {
+		//return a matrix with a number of copied rows.
+		if (number_of_copies == 1)return A;
+		int size_all = A.r * A.c;
+		int col_pos = 0;
+		Matrix<T> ans(number_of_copies, size_all);
+		for (int i = 0; i < number_of_copies; i++) {
+			ans.set_e_ind(col_pos, A);
+			col_pos += size_all;
 		}
-		
+		return ans;
+	}
+	friend Matrix<T> ReLu(const Matrix<T>& A,T shift=0) {
+		//return a matrix after ReLu function.
+		int size_all = A.r * A.c;
+		Matrix<T> ans(A.r, A.c);
+		for (int i = 0; i < size_all; i++)
+			ans.e[i] = (A.e[i] > shift ? A.e[i] : 0);
+		return ans;
+	}
+};
+
+enum Error_code { success, underflow, overflow, outOfRange };
+const int max_tensor = 10;
+
+template <class T> class Tensor
+{
+public:
+	// methods of the Tensor ADT 
+	Tensor() {	//constructor
+		count = 0;
+	};
+	Tensor(Matrix<T> *val, int size) {
+		count = size;
+		for (int i = 0; i < count; i++)
+			entry[i] = val[i];
+	}
+	Tensor(const Tensor<T>& X) {
+		count = X.count;
+		for (int i = 0; i < count; i++)
+			entry[i] = X.entry[i];
+	}
+	Tensor<T> operator = (const Tensor<T>& X) {
+		count = X.count;
+		for (int i = 0; i < count; i++)
+			entry[i] = X.entry[i];
+		return X;
+	}
+	int size() const {
+		return count;
+	}
+	bool full() const {
+		return count == max_tensor;
+	}
+	bool empty() const {
+		return count == 0;
+	}
+	void clear() {
+		count = 0;
+	}
+	void traverse(void(*visit)(Matrix<T>& A)) {
+		for (int i = 0; i < count; i++)
+		{
+			(*visit)(entry[i]);
+		}
+	}
+	Error_code retrieve(int position, Matrix<T>& A) const {
+		if (count == 0) return underflow;
+		if (position<1 || position>count) return outOfRange;
+		A = entry[position - 1];
+		return success;
+	}
+	Error_code replace(int position, const Matrix<T>& A) {
+		if (count == 0) return underflow;
+		if (position<1 || position>count) return outOfRange;
+		entry[position - 1] = A;
+		return success;
+	}
+	Error_code remove(int position, Matrix<T>& A) {
+		if (count == 0) return underflow;
+		if (position<1 || position>count) return outOfRange;
+		A = entry[position - 1];
+		for (int j = position - 1; j < count - 1; j++)
+		{
+			entry[j] = entry[j + 1];
+		}
+		count--;
+		return success;
+	}
+	Error_code insert(int position, const Matrix<T>& A) {
+		if (count == max_tensor) return overflow;
+		if (position<1 || position>count + 1) return outOfRange;
+		for (int j = count - 1; j >= position - 1; j--)
+		{
+			entry[j + 1] = entry[j];
+		}
+		count++;
+		entry[position - 1] = A;
+		return success;
+	}
+	Error_code append(const Matrix<T>& A) {
+		if (count == max_tensor) return overflow;
+		entry[count] = A;
+		count++;
+		return success;
+	}
+	Matrix<T> get_entry_ind(int position) const {
+		if (count == 0 || position < 0 || position >= count) {
+			cout << "size or position error, get_entry_ind failed" << endl;
+			return Matrix<T>();
+		}		
+		return entry[position];
+	}
+	void print() const {
+		cout << endl << endl << "//" << endl;
+		cout << setprecision(4);
+		int row_pos;
+		for (int k = 0; k < count; k++) {
+			for (int i = 0; i < entry[k].row(); i++) {
+				row_pos = i * entry[k].col();
+				for (int j = 0; j < entry[k].col(); j++) {
+					cout << setw(14) << entry[k].ele_ind(row_pos + j);
+				}
+				cout << endl;
+			}
+			cout << "//" << endl;
+		}
+		cout << endl;
+	}
+	friend ostream& operator << (ostream& out,const Tensor<T>& X) {
+		out << endl << endl << "//" << endl;
+		out << setprecision(4);
+		int row_pos;
+		for (int k = 0; k < X.count; k++) {
+			for (int i = 0; i < X.entry[k].row(); i++) {
+				row_pos = i *X. entry[k].col();
+				for (int j = 0; j < X.entry[k].col(); j++) {
+					out <<  setw(14) << X.entry[k].ele_ind(row_pos + j);
+				}
+				out << endl;
+			}
+			out << "//" << endl;
+		}
+		out << endl;
+		return out;
+	}
+protected:
+	// data members for a contiguous list implementation 
+	int count;
+	Matrix<T> entry[max_tensor];
+};
+
+template <class T> class net
+{
+protected:
+	Tensor<T> weight;
+	Tensor<T> bias;
+	Matrix<T> input;
+	Matrix<T> desired_output;
+public:
+	net() {}
+	net(int *shape, int shape_size, char type = 'g') {
+		for (int i = 1; i < shape_size; i++) {
+			weight.append(Matrix<T>(shape[i - 1], shape[i], type));
+			bias.append(Matrix<T>(1, shape[i], type));
+		}
+	}
+	net(const net<T>& N) {
+		weight = N.weight;
+		bias = N.bias;
+	}
+	net operator = (const net<T>& N) {
+		weight = N.weight;
+		bias = N.bias;
+		return N;
+	}
+	~net() {}
+
+	void set_input(const Matrix<T>& Input) {
+		input = Input;
+	}
+	void set_desired_output(const Matrix<T>& desired_Output) {
+		desired_output = desired_Output;
+	}
+	void set_put(const Matrix<T>& Input, const Matrix<T>& desired_Output) {
+		input = Input;
+		desired_output = desired_Output;
+	}
+	Matrix<T> forward_propagation() const {
+		int shape_size = weight.size();
+		Tensor<T> biases;
+		for(int i=0;i<bias.size();i++)
+			biases.append(extend_row_copy(bias.get_entry_ind(i), input.row()));
+		Matrix<T> ans(input);
+		for (int i = 0; i < shape_size; i++)
+			ans = ReLu(ans * weight.get_entry_ind(i) + biases.get_entry_ind(i)); // use ReLu
+		return ans;
+	}
+	Matrix<T> cost_fun() const {
+		//waiting for
+		return Matrix<T>();
+	}
+	void backward_propagation(Tensor<T>& d_weight, Tensor<T>& d_bias) {
+		//waiting for
+
+	}
+
+	void print() const {
+		cout << endl << setw(28) << "<------" << endl;
+		cout << "weight =" << weight;
+		cout << "bias =" << bias;
+		cout << setw(28) << "------>" << endl;
+	}
+	friend ostream& operator << (ostream& out, const net<T>& N) {
+		out << endl << setw(28) << "<------" << endl;
+		out << "weight =" << N.weight;
+		out << "bias =" << N.bias;
+		out << setw(28) << "------>" << endl;
+		return out;
 	}
 };
