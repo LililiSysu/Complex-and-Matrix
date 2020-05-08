@@ -205,31 +205,51 @@ int main_tensor/**/()
 int main/*_net/**/()
 {
 	const int shape_size = 4;
-	int shape[] = {
-		784,16,16,10
+	int _shape[] = {
+		3,4,3,4
 	};
-	net<Type> N(shape, shape_size);
-	//cout << "N:" << N;
+	net<Type> N(Matrix<int>(1,shape_size,_shape));
 
-	N.set_input(Matrix<Type>(1, 784, '1'));
-	cout << "N.forward_propagation()=" << N.forward_propagation();
+	cout << "shape" << N.get_shape();
+	cout << "N:" << N;
+
+	N.set_input(Matrix<Type>(2, 3, 'u'));
+	N.set_desired_output(Matrix<int>(2, 1, 'N'));
+	cout << "N.get_desired_output()=" << N.get_desired_output();
+	N.set_hypara(0.02, 0.002, 0.01);
+
+	N.forward_prop();
+	cout << "N.get_midput()" << N.get_midput();
+	cout << "N.output=" << N.get_output();
+	cout << "N.cost_fun()=" << N.cost_fun();
+
+	N.backward_prop();
+	N.forward_prop();
+	cout << "N.get_midput()=" << N.get_midput();
+	cout << "N.output=" << N.get_output();
+	cout << "N.cost_fun()=" << N.cost_fun();
+	
+
+	for (int i = 0; i < 100; i++) {
+		N.backward_prop();
+		N.forward_prop();
+		cout << "N.output=" << N.get_output();
+		cout << "N.cost_fun()=" << N.cost_fun();
+	}
+	cout << "N.get_input()=" << N.get_input() << endl;
+	cout << "N:" << N << endl;
 
 	end(); return 0;
 }
 
 int main_test/**/()
 {
-	Type val[] = {
-		4,-3,5,77
-	};
-	Matrix<Type> A(1, 4, val);
-	cout << "A=" << A;
-
-	A = extend_row_copy(A, 6);
-	cout << "A=" << A;
-
-	A = ReLu(A);
-	cout << "A=" << A;
+	cout << rand_num_ga<double>((unsigned int)time(0)) << endl;
+	cout << rand_num_ga<double>((unsigned int)time(0)) << endl;
+	cout << rand_num_ga<double>((unsigned int)time(0)) << endl;
+	cout << rand_num_ga<double>((unsigned int)time(0)) << endl;
+	cout << rand_num_ga<double>((unsigned int)time(0)) << endl;
+	cout << rand_num_ga<double>((unsigned int)time(0)) << endl;
 
 	end(); return 0;
 }
