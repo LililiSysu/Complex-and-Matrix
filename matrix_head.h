@@ -858,6 +858,25 @@ public:
 	T ele_ind(int row, int column) const {
 		return e[row * c + column];	//return the element in positon (row, column)
 	}
+	Matrix<T> ele_ind(const Matrix<int>& Pos,bool to_row = true)const {	//return a row vector by default
+		if (to_row) {
+			int ans_size = Pos.row() * Pos.col();
+			Matrix<T> ans(1, ans_size);
+			for (int i = 0; i < ans_size; i++) {
+				ans.set_e_ind(i, e[Pos.ele_ind(i)]);
+			}
+			return ans;
+		}
+		else {
+			int ans_size = Pos.row() * Pos.col();
+			Matrix<T> ans(ans_size, 1);
+			for (int i = 0; i < ans_size; i++) {
+				ans.set_e_ind(i, e[Pos.ele_ind(i)]);
+			}
+			return ans;
+		}
+		
+	}
 	Matrix<T> get_row(int row) const {	//return the row vector in row (row)
 		Matrix<T> result(1, c);
 		row--;
@@ -872,7 +891,7 @@ public:
 			result.set_e_ind(i, e[i * c + column]);
 		return result;
 	}
-	Matrix<T> flat(bool to_row = 1) const {	//return the [row/column] vector of all elements
+	Matrix<T> flat(bool to_row = true) const {	//return the [row/column] vector of all elements
 		if (to_row)
 			return Matrix<T>(1, r * c, e);
 		else
@@ -1317,7 +1336,27 @@ public:
 		c = column;
 	}
 	void set_size(int row, int column) {
-		change_size(row, column);
+		int size_1 = r * c;
+		int size_2 = row * column;
+		if (size_1 = size_2);
+		else if (size_1 < size_2) {
+			T *temp = e;
+			e = new T[size_2];
+			for (int i = 0; i < size_1; i++)
+				e[i] = temp[i];
+			delete[] temp;
+		}
+		else {
+			T *temp = e;
+			e = new T[size_2];
+			for (int i = 0; i < size_2; i++)
+				e[i] = temp[i];
+			delete[] temp;
+		}
+
+		r = row;
+		c = column;
+
 	}
 	void set_e(int pos, T element) {
 		e[pos - 1] = element;
@@ -1575,6 +1614,13 @@ public:
 		}
 		else
 			cout << "change size fail" << endl;
+	}
+	void new_size(int row, int column) {
+		T *temp = e;
+		e = new T[row * column];
+		delete[]temp;
+		r = row;
+		c = column;
 	}
 	void cut(int row, int column) {
 		if (row < r && column < c) {
@@ -2374,6 +2420,8 @@ public:
 			return Matrix<T>();
 		}		
 	}
+
+	//machine learning
 	friend Matrix<T> extend_row_copy(const Matrix<T>& A, int number_of_copies) {
 		//return a matrix with a number of copied rows.
 		if (number_of_copies == 1)return A;
@@ -2387,13 +2435,150 @@ public:
 		return ans;
 	}
 	friend Matrix<T> ReLu(const Matrix<T>& A,T shift=0) {
-		//return a matrix after ReLu function.
+		//return a matrix after ReLu function at all elements
 		int size_all = A.r * A.c;
 		Matrix<T> ans(A.r, A.c);
 		for (int i = 0; i < size_all; i++)
 			ans.e[i] = (A.e[i] > shift ? A.e[i] : 0);
 		return ans;
 	}
+	friend Matrix<T> Sigmoid(const Matrix<T>& A) {
+		//return a matrix after Sigmiod function at all elements.
+		int size_all = A.r * A.c;
+		Matrix<T> ans(A.r, A.c);
+		for (int i = 0; i < size_all; i++)
+			ans.e[i] = 1 / (1 + exp(A.e[i]));
+		return ans;
+	}
+	friend Matrix<T> max(const Matrix<T>& A, T num) {
+		//return a matrix choosing the max between elements of A and num
+		Matrix<T> ans(A.r, A.c);
+		int size_all=A.r *A.c;
+		for (int i = 0; i < size_all; i++)
+			ans.e[i] = (A.e[i] > num ? A.e[i] : num);
+		return ans;
+	}
+	friend Matrix<T> row_sum(const Matrix<T>& A) {
+		//sum up each row return a column vector
+		Matrix<T> ans(A.r,1, '0');
+		int row_pos;
+		for (int i = 0; i < A.r; i++) {
+			row_pos = i * A.c;
+			for (int j = 0; j < A.c; j++)
+				ans.e[i] = ans.e[i] + A.e[row_pos + j];
+		}			
+		return ans;
+	}
+	friend Matrix<T> row_sum_except(const Matrix<T>& A, const Matrix<int>& Ind) {
+		//sum up each row return a column vector except index (Ind) of element in the rows
+		Matrix<T> ans(A.r, 1, '0');
+		int row_pos;
+		for (int i = 0; i < A.r; i++) {
+			row_pos = i * A.c;
+			for (int j = 0; j < A.c; j++)
+				if (j != Ind.ele_ind(i))
+					ans.e[i] = ans.e[i] + A.e[row_pos + j];
+		}
+		return ans;
+	}
+	friend Matrix<T> row_plus(const Matrix<T>& A, const Matrix<T>& B) {
+		//return a matrix that each row in A (r * c) plus a different number in B (r * 1)
+		Matrix<T> ans(A.r, A.c);
+		int row_pos;
+		for (int i = 0; i < A.r; i++) {
+			row_pos = i * A.c;
+			for (int j = 0; j < A.c; j++)
+				ans.e[row_pos + j] = A.e[row_pos + j] + B.e[i];
+		}
+		return ans;
+	}
+	friend Matrix<T> row_choose(const Matrix<T>& A, const Matrix<int>& B) {
+		//return a column vector choosing an element in each row of A (r * c) with index in B(r * 1)
+		Matrix<T> ans(A.r, 1);
+		int row_pos;
+		for (int i = 0; i < A.r; i++) {
+			row_pos = i * A.c;
+			ans.e[i] = A.e[row_pos + B.ele_ind(i)];
+		}
+		return ans;
+	}
+	friend Matrix<T> square_ele(const Matrix<T>& A) {
+		//return a matrix that square the elements of A
+		Matrix<T> ans(A.r, A.c);
+		int size_all = A.r *A.c;
+		for (int i = 0; i < size_all; i++)
+			ans.e[i] = A.e[i] * A.e[i];
+		return ans;
+	}
+	friend Matrix<T> log_ele(const Matrix<T>& A) {
+		//return a matrix that log the elements of A
+		Matrix<T> ans(A.r, A.c);
+		int size_all = A.r *A.c;
+		for (int i = 0; i < size_all; i++)
+			ans.e[i] = log(A.e[i]);
+		return ans;
+	}
+	friend Matrix<T> exp_ele(const Matrix<T>& A) {
+		//return a matrix that exp the elements of A
+		Matrix<T> ans(A.r, A.c);
+		int size_all = A.r *A.c;
+		for (int i = 0; i < size_all; i++)
+			ans.e[i] = exp(A.e[i]);
+		return ans;
+	}
+	friend Matrix<T> ele_times(const Matrix<T>& A, const Matrix<T>& B) {
+		//return a matrix that exp the elements of A
+		int size_all = A.r *A.c;
+		if (size_all == B.r * B.c) {
+			Matrix<T> ans(A.r, A.c);
+			for (int i = 0; i < size_all; i++)
+				ans.e[i] = A.e[i] * B.e[i];
+			return ans;
+		}
+		else {
+			cout << "size error, ele_times failed" << endl;
+			return Matrix<T>();
+		}
+	}
+	friend Matrix<T> ele_devide(const Matrix<T>& A, const Matrix<T>& B) {
+		//return a matrix that exp the elements of A
+		int size_all = A.r *A.c;
+		if (size_all == B.r * B.c) {
+			Matrix<T> ans(A.r, A.c);
+			for (int i = 0; i < size_all; i++)
+				ans.e[i] = A.e[i] / B.e[i];
+			return ans;
+		}
+		else {
+			cout << "size error, ele_devide failed" << endl;
+			return Matrix<T>();
+		}
+	}
+	friend T sum_ele(const Matrix<T>& A) {
+		//return a number that sum up all elements of A
+		T ans = 0;
+		int size_all = A.r *A.c;
+		for (int i = 0; i < size_all; i++)
+			ans = ans + A.e[i];
+		return ans;
+	}
+	friend Matrix<T> row_ele_fetch(const Matrix<T>& A, const Matrix<int>& Col_pos_ind) {
+		//fetch an element of each row; return a column vector
+		if (Col_pos_ind.col() == 1 && Col_pos_ind.row()==A.r) {
+			Matrix<T> ans(A.r, 1);
+			int row_pos = 0;
+			for (int i = 0; i < A.r; i++) {
+				ans.set_e_ind(i, A.e[row_pos + Col_pos_ind.ele_ind(i)]);
+				row_pos += A.c;
+			}
+			return ans;
+		}
+		else {
+			cout << "size error, row_ele_fetch failed" << endl;
+			return Matrix<T>();
+		}
+	}
+	
 };
 
 enum Error_code { success, underflow, overflow, outOfRange };
@@ -2433,6 +2618,9 @@ public:
 	}
 	void clear() {
 		count = 0;
+	}
+	void clear_part(int part) {
+		count = part;
 	}
 	void traverse(void(*visit)(Matrix<T>& A)) {
 		for (int i = 0; i < count; i++)
@@ -2529,56 +2717,182 @@ protected:
 template <class T> class net
 {
 protected:
+	Matrix<int> shape;
 	Tensor<T> weight;
 	Tensor<T> bias;
-	Matrix<T> input;
-	Matrix<T> desired_output;
+	Matrix<T> input;	/* each input list by row */
+	Tensor<T> midput;	/* each midput list by row, shape as neuron to record the middle computation */
+	Matrix<T> output;	/* each output list by row */
+	Matrix<int> desired_output;	/* interger indexes list by rows denoting which neuron is wannted for inputs */
+	T yita_w, yita_b, lambda;
 public:
 	net() {}
-	net(int *shape, int shape_size, char type = 'g') {
-		for (int i = 1; i < shape_size; i++) {
-			weight.append(Matrix<T>(shape[i - 1], shape[i], type));
-			bias.append(Matrix<T>(1, shape[i], type));
+	net(const Matrix<int>& _shape, char type = 'g') {	// initialize the weight and bias to be gaussian distribution
+		shape = _shape;	//shape need to be a row vector
+		for (int i = 1; i < shape.col(); i++) {
+			weight.append(Matrix<T>(shape.ele_ind(i - 1), shape.ele_ind(i), type));
+			bias.append(Matrix<T>(1, shape.ele_ind(i), type));
 		}
 	}
 	net(const net<T>& N) {
 		weight = N.weight;
 		bias = N.bias;
+		yita_w = N.yita_w;
+		yita_b = N.yita_b;
+		lambda = N.lambda;
 	}
 	net operator = (const net<T>& N) {
 		weight = N.weight;
 		bias = N.bias;
+		yita_w = N.yita_w;
+		yita_b = N.yita_b;
+		lambda = N.lambda;
 		return N;
 	}
 	~net() {}
 
-	void set_input(const Matrix<T>& Input) {
-		input = Input;
+	Matrix<int> get_shape() const {
+		return shape;
 	}
-	void set_desired_output(const Matrix<T>& desired_Output) {
-		desired_output = desired_Output;
+	Matrix<T> get_input() const {
+		return input;
 	}
-	void set_put(const Matrix<T>& Input, const Matrix<T>& desired_Output) {
-		input = Input;
-		desired_output = desired_Output;
+	Tensor<T> get_midput() const {
+		return midput;
 	}
-	Matrix<T> forward_propagation() const {
-		int shape_size = weight.size();
-		Tensor<T> biases;
-		for(int i=0;i<bias.size();i++)
-			biases.append(extend_row_copy(bias.get_entry_ind(i), input.row()));
-		Matrix<T> ans(input);
-		for (int i = 0; i < shape_size; i++)
-			ans = ReLu(ans * weight.get_entry_ind(i) + biases.get_entry_ind(i)); // use ReLu
-		return ans;
+	Matrix<T> get_output() const {
+		return output;
 	}
-	Matrix<T> cost_fun() const {
-		//waiting for
-		return Matrix<T>();
+	Matrix<int> get_desired_output() const {
+		return desired_output;
 	}
-	void backward_propagation(Tensor<T>& d_weight, Tensor<T>& d_bias) {
-		//waiting for
 
+	void set_input(const Matrix<T>& Input) {
+		input = Input;	//input is the matrix of [number of inputs] * [each input size] (r * c); each row has a single input.
+		midput.append(input);
+	}
+	void set_desired_output(const Matrix<int>& desired_Output) {
+		desired_output = desired_Output;	//desired_output is the column vector having indexes of the wanted neuron for inputs
+	}
+	void set_put(const Matrix<T>& Input, const Matrix<int>& desired_Output) {
+		input = Input;
+		desired_output = desired_Output;	//the row of [input] must equals to the row of [desired_output]
+	}
+	void set_hypara(T _yita_w, T _yita_b, T _lambda) {
+		yita_w = _yita_w;
+		yita_b = _yita_b;
+		lambda = _lambda;
+	}
+	void forward_prop() {	// forward propogation; X * A + b then ReLu
+		int shape_size = shape.col();
+		Tensor<T> biases;
+		for (int i = 0; i < bias.size(); i++)
+			biases.append(extend_row_copy(bias.get_entry_ind(i), input.row()));
+		midput.clear_part(1);
+		for (int i = 0; i < shape_size-2; i++)
+			midput.append(ReLu(midput.get_entry_ind(i) * weight.get_entry_ind(i) + biases.get_entry_ind(i))); // use ReLu
+		midput.append(midput.get_entry_ind(shape_size - 2) * weight.get_entry_ind(shape_size - 2) + biases.get_entry_ind(shape_size - 2));	//last layer not use ReLu
+		output = midput.get_entry_ind(shape_size - 1);
+	}
+	Matrix<T> cost_fun() const {	// -1 + sum of max([each output neuron] - [correct output neuron] + 1, 0)
+		T ans = T(0);
+		int output_size = bias.get_entry_ind(bias.size() - 1).col();
+		int input_num = input.row();
+		Matrix<T> desired_output_shift = 1 - row_choose(output, desired_output);
+		return row_sum_except(max(row_plus(output, desired_output_shift), 0), desired_output);
+	}
+	Matrix<T> cost_fun2() const {	// -1 + sum of max([each output neuron] - [correct output neuron] + 1, 0)^2
+		T ans = T(0);
+		int output_size = bias.get_entry_ind(bias.size() - 1).col();
+		int input_num = input.row();
+		Matrix<T> desired_output_shift = 1 - row_choose(output, desired_output);
+		return -1 + row_sum(square_ele(max(row_plus(output, desired_output_shift), 0)));
+	}
+	Matrix<T> cost_fun_softmax() const {
+		//return -log(e^sk / \sum_j(e^sj)); where [sk] is the correct neuron
+		return -log_ele(ele_devide(exp_ele(row_ele_fetch(output, desired_output)), row_sum(exp_ele(output))));
+	}
+	Matrix<T> cost_fun_regu() const {	// -1 + sum of max([each output neuron] - [correct output neuron] + 1, 0) +lambda * sum of weight^2
+		T weight_all2 = 0;
+		for (int i = 0; i < weight.size(); i++) {
+			weight_all2 = weight_all2 + sum_ele(square_ele(weight.get_entry_ind(i)));
+		}
+		return cost_fun() + lambda * weight_all2;
+	}
+	void backward_prop() {	// backward propogation; cost_fun()
+		int input_bunch = desired_output.row();
+		int output_neuron = shape.ele_ind(shape.col() - 1);
+		int layer_size = shape.col();
+
+		Tensor<T> d_weight;
+		Tensor<T> d_bias;
+		for (int i = 1; i < shape.col(); i++) {
+			d_weight.append(Matrix<T>(shape.ele_ind(i - 1), shape.ele_ind(i), '0'));
+			d_bias.append(Matrix<T>(1, shape.ele_ind(i), '0'));
+		}
+
+		int bunch_pos = 0;
+		for (int i = 0; i < input_bunch; i++) {		// loop in input bunch
+			// d_cost_fun / d_sj	(decided by cost function)
+			Matrix<T> d_sj(1, output_neuron);
+			for (int j = 0; j < output_neuron; j++)	//column of d_sj
+				if (j == desired_output.ele_ind(i) || output.ele_ind(bunch_pos + j) - output.ele_ind(bunch_pos + desired_output.ele_ind(i)) < -1)	//j == k or s_j - s_k + 1 >= 0
+					d_sj.set_e_ind(j, 0);
+				else
+					d_sj.set_e_ind(j, 1);		//d_cost_fun
+			bunch_pos += output_neuron;
+
+			// d_sj / d_weight & d_sj / d_bias	(decided by non-linear function)
+			for (int j = layer_size - 1; j > 0; j--) {		// backward flow
+				int d_w_row = shape.ele_ind(j - 1);
+				int d_w_col = shape.ele_ind(j);
+				int row_pos = 0;
+
+				//seting d_sj
+				Matrix<T> next_d_sj(1, d_w_row, '0');
+				if (j == layer_size - 1) {	// no d_ReLu
+					for (int p = 0; p < d_w_row; p++) {
+						for (int q = 0; q < d_w_col; q++)
+							next_d_sj.set_e_ind(p, next_d_sj.ele_ind(q) \
+								+ weight.get_entry_ind(j - 1).ele_ind(row_pos + q) * d_sj.ele_ind(q));
+						row_pos += d_w_col;
+					}
+				}
+				else {	// need d_ReLu
+					int bunch_pos1 = i * d_w_col;
+					for (int p = 0; p < d_w_row; p++) {
+						for (int q = 0; q < d_w_col; q++)
+							next_d_sj.set_e_ind(p, next_d_sj.ele_ind(q) \
+								+ (midput.get_entry_ind(j).ele_ind(bunch_pos1 + q) >= 0 ? weight.get_entry_ind(j - 1).ele_ind(row_pos + q) : 0)	/* d_ReLu using */ \
+								* d_sj.ele_ind(q));	// can be optimized by putting d_sj.ele_ind(q) into [ ?_: ]
+						row_pos += d_w_col;
+					}
+				}
+
+				//setting d_b and d_w
+				Matrix<T> d_b(d_sj);
+				Matrix<T> d_w(d_w_row, d_w_col);
+				row_pos = 0;
+				int bunch_pos2 = i * d_w_row;
+				for (int k = 0; k < d_w_row; k++) {
+					for (int t = 0; t < d_w_col; t++)
+						d_w.set_e_ind(row_pos + t, midput.get_entry_ind(j - 1).ele_ind(bunch_pos2 + k) * d_sj.ele_ind(t));
+					row_pos += d_w_col;
+				}
+				d_bias.replace(j, d_bias.get_entry_ind(j - 1) + d_b);
+				d_weight.replace(j, d_weight.get_entry_ind(j - 1) + d_w);
+
+				d_sj = next_d_sj;
+			}
+		}
+		for (int i = 0; i < shape.col() - 1; i++) {	// average the derivative
+			d_bias.replace(i + 1, d_bias.get_entry_ind(i) / input_bunch);
+			d_weight.replace(i + 1, d_weight.get_entry_ind(i) / input_bunch);
+		}
+		for (int i = 0; i < shape.col() - 1; i++) {	// update weight and bias
+			bias.replace(i + 1, bias.get_entry_ind(i) - yita_b * d_bias.get_entry_ind(i));
+			weight.replace(i + 1, weight.get_entry_ind(i) - yita_w * d_weight.get_entry_ind(i) - lambda * weight.get_entry_ind(i));
+		}
 	}
 
 	void print() const {
